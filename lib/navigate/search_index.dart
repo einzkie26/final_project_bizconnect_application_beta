@@ -1,0 +1,1328 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/user_model.dart';
+import '../models/company_model.dart';
+import 'chat_screen.dart';
+import 'company_details_page.dart';
+import 'user_details_page.dart';
+
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  final TextEditingController _searchController = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String _selectedFilter = 'All';
+  bool _isSearching = false;
+  List<UserModel> _searchResults = [];
+  List<Map<String, dynamic>>? _companyResults = [];
+  Set<String> _followingUsers = {};
+  Set<String> _followingCompanies = {};
+
+  final List<String> _filters = [
+    'All',
+    'Companies',
+    'Entrepreneurs',
+    'Investors',
+    'Startups',
+  ];
+
+  void _performSearch(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        _searchResults = [];
+        _isSearching = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isSearching = true;
+    });
+
+    try {
+      final currentUserId = _auth.currentUser?.uid;
+      final searchLower = query.toLowerCase();
+      
+      // Get all users and companies, then filter locally
+      final allUsers = await _firestore.collection('users').get();
+      final allCompanies = await _firestore.collection('companies').get();
+
+      final userResults = allUsers.docs
+          .map((doc) => UserModel.fromMap(doc.data(), doc.id))
+          .where((user) {
+            if (user.id == currentUserId) return false;
+            final nameLower = user.name.toLowerCase();
+            final locationLower = (user.location ?? '').toLowerCase();
+            return nameLower.contains(searchLower) || locationLower.contains(searchLower);
+          })
+          .toList();
+
+      final companyResults = allCompanies.docs
+          .where((doc) {
+            final name = (doc.data()['name'] ?? '').toString().toLowerCase();
+            return name.contains(searchLower);
+          })
+          .map((doc) => {
+            'type': 'company',
+            'id': doc.id,
+            'name': doc.data()['name'],
+            'description': doc.data()['description'],
+            'industry': doc.data()['industry'],
+            'ownerId': doc.data()['ownerId'],
+            'memberIds': doc.data()['memberIds'],
+            'photoUrl': doc.data()['photoUrl'],
+          })
+          .toList();
+
+      setState(() {
+        _searchResults = userResults;
+        _companyResults = companyResults;
+      });
+    } catch (e) {
+      setState(() {
+        _searchResults = [];
+        _companyResults = [];
+      });
+    }
+  }
+
+  List<String> _recentSearches = [
+    
+  ];
+  
+  void _addToRecentSearches(String query) {
+    if (query.isNotEmpty && !_recentSearches.contains(query)) {
+      setState(() {
+        _recentSearches.insert(0, query);
+        if (_recentSearches.length > 10) {
+          _recentSearches = _recentSearches.take(10).toList();
+        }
+      });
+    }
+  }
+  
+  void _clearRecentSearches() {
+    setState(() {
+      _recentSearches.clear();
+    });
+  }
+
+  void _followUser(String userId) async {
+    final currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please log in to follow users')),
+      );
+      return;
+    }
+    
+    if (currentUserId == userId) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('You cannot follow yourself')),
+      );
+      return;
+    }
+    
+    try {
+      final existingFollow = await _firestore
+          .collection('follows')
+          .where('followerId', isEqualTo: currentUserId)
+          .where('followingId', isEqualTo: userId)
+          .get();
+      
+      if (existingFollow.docs.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Already following this user')),
+        );
+        return;
+      }
+      
+      await _firestore.collection('follows').add({
+        'followerId': currentUserId,
+        'followingId': userId,
+        'createdAt': DateTime.now(),
+      });
+      
+      await _loadFollowingUsers();
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Following! You can now chat with them.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to follow: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+  
+  void _messageUser(String userId, String userName) async {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(
+          otherUserId: userId,
+          otherUserName: userName,
+          chatType: 'personal',
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _companyResults = [];
+    _loadFollowingUsers();
+  }
+  
+  Future<void> _loadFollowingUsers() async {
+    final currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) return;
+    
+    try {
+      final followQuery = await _firestore
+          .collection('follows')
+          .where('followerId', isEqualTo: currentUserId)
+          .get();
+      
+      final companyFollowQuery = await _firestore
+          .collection('company_follows')
+          .where('followerId', isEqualTo: currentUserId)
+          .get();
+      
+      setState(() {
+        _followingUsers = followQuery.docs
+            .map((doc) => doc.data()['followingId'] as String)
+            .toSet();
+        _followingCompanies = companyFollowQuery.docs
+            .map((doc) => doc.data()['companyId'] as String)
+            .toSet();
+      });
+    } catch (e) {
+      // Handle silently
+    }
+  }
+  
+  Future<void> _unfollowUser(String userId) async {
+    final currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) return;
+    
+    try {
+      final followQuery = await _firestore
+          .collection('follows')
+          .where('followerId', isEqualTo: currentUserId)
+          .where('followingId', isEqualTo: userId)
+          .get();
+      
+      for (var doc in followQuery.docs) {
+        await doc.reference.delete();
+      }
+      
+      await _loadFollowingUsers();
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unfollowed'), backgroundColor: Colors.orange),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to unfollow: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+  
+  Future<void> _followCompany(String companyId) async {
+    final currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) return;
+    
+    try {
+      final existingFollow = await _firestore
+          .collection('company_follows')
+          .where('followerId', isEqualTo: currentUserId)
+          .where('companyId', isEqualTo: companyId)
+          .get();
+      
+      if (existingFollow.docs.isNotEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Already following this company')),
+          );
+        }
+        return;
+      }
+      
+      await _firestore.collection('company_follows').add({
+        'followerId': currentUserId,
+        'companyId': companyId,
+        'createdAt': DateTime.now(),
+      });
+      
+      await _loadFollowingUsers();
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Following company!'), backgroundColor: Colors.green),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to follow: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+  
+  Future<void> _unfollowCompany(String companyId) async {
+    final currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) return;
+    
+    try {
+      final followQuery = await _firestore
+          .collection('company_follows')
+          .where('followerId', isEqualTo: currentUserId)
+          .where('companyId', isEqualTo: companyId)
+          .get();
+      
+      for (var doc in followQuery.docs) {
+        await doc.reference.delete();
+      }
+      
+      await _loadFollowingUsers();
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unfollowed company'), backgroundColor: Colors.orange),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to unfollow: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<UserModel> get _filteredResults {
+    if (_selectedFilter == 'All') {
+      return _searchResults;
+    }
+    return _searchResults.where((user) {
+      switch (_selectedFilter) {
+        case 'Companies':
+          return user.isWorkingAtCompany && user.companyName != null;
+        case 'Entrepreneurs':
+          return !user.isWorkingAtCompany;
+        default:
+          return true;
+      }
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Search',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Search Bar
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _isSearching ? Colors.deepPurple : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        _performSearch(value);
+                      },
+                      onSubmitted: (value) {
+                        _addToRecentSearches(value);
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Search by name or location...',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 14,
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.deepPurple,
+                        ),
+                        suffixIcon: _isSearching
+                            ? IconButton(
+                                icon: const Icon(
+                                  Icons.clear,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  _performSearch('');
+                                },
+                              )
+                            : null,
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 40,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _filters.length,
+                      itemBuilder: (context, index) {
+                        final filter = _filters[index];
+                        final isSelected = _selectedFilter == filter;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: FilterChip(
+                            label: Text(filter),
+                            selected: isSelected,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedFilter = filter;
+                              });
+                            },
+                            backgroundColor: Colors.grey[100],
+                            selectedColor: Colors.deepPurple,
+                            labelStyle: TextStyle(
+                              color: isSelected ? Colors.white : Colors.black87,
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                            ),
+                            checkmarkColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(
+                                color: isSelected ? Colors.deepPurple : Colors.transparent,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            Expanded(
+              child: _isSearching
+                  ? _buildSearchResults()
+                  : _buildRecentSearches(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchResults() {
+    final results = _filteredResults;
+    
+    if (results.isEmpty && (_companyResults?.isEmpty ?? true)) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 80,
+              color: Colors.grey[300],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No results found',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Try adjusting your search or filters',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[500],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: results.length + (_companyResults?.length ?? 0),
+      itemBuilder: (context, index) {
+        if (index < results.length) {
+          return _buildSearchResultCard(results[index]);
+        } else {
+          final companyIndex = index - results.length;
+          if (_companyResults != null && companyIndex < _companyResults!.length) {
+            return _buildCompanyResultCard(_companyResults![companyIndex]);
+          }
+          return const SizedBox();
+        }
+      },
+    );
+  }
+
+  void _showUserProfile(UserModel user) {
+    _addToRecentSearches(user.name);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.8,
+        maxChildSize: 0.9,
+        minChildSize: 0.5,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Text(
+                      user.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Profile Header Section
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.deepPurple.withOpacity(0.1), Colors.purple.withOpacity(0.05)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.deepPurple.withOpacity(0.2)),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: Colors.deepPurple.withOpacity(0.3), width: 2),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(14),
+                                child: user.profilePicUrl != null
+                                    ? Image.network(
+                                        user.profilePicUrl!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) => Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [Colors.deepPurple.withOpacity(0.8), Colors.purple.withOpacity(0.6)],
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [Colors.deepPurple.withOpacity(0.8), Colors.purple.withOpacity(0.6)],
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(user.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                  Text(user.email, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                                  if (user.location != null)
+                                    Text(user.location!, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // About Section
+                      if (user.bio != null)
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.deepPurple,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(Icons.info, color: Colors.white, size: 18),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Text('About', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Text(user.bio!, style: const TextStyle(fontSize: 14)),
+                            ],
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+                      
+                      // Contact Section
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(Icons.contact_mail, color: Colors.white, size: 18),
+                                ),
+                                const SizedBox(width: 12),
+                                const Text('Contact Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue)),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                const Icon(Icons.email, size: 16, color: Colors.grey),
+                                const SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    'Email: ${user.email}',
+                                    style: const TextStyle(fontSize: 14),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (user.phoneNumber != null) ...[
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  const Icon(Icons.phone, size: 16, color: Colors.grey),
+                                  const SizedBox(width: 8),
+                                  Flexible(
+                                    child: Text(
+                                      'Phone: ${user.phoneNumber}',
+                                      style: const TextStyle(fontSize: 14),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                            if (user.location != null) ...[
+                              const SizedBox(height: 8),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                                  const SizedBox(width: 8),
+                                  Flexible(
+                                    child: Text(
+                                      'Location: ${user.location}',
+                                      style: const TextStyle(fontSize: 14),
+                                      softWrap: true,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Action Buttons
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.green.withOpacity(0.2)),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: StatefulBuilder(
+                                builder: (context, setModalState) => ElevatedButton.icon(
+                                  onPressed: () {
+                                    if (_followingUsers.contains(user.id)) {
+                                      _unfollowUser(user.id);
+                                    } else {
+                                      _followUser(user.id);
+                                    }
+                                    setModalState(() {});
+                                    setState(() {});
+                                  },
+                                  icon: Icon(
+                                    _followingUsers.contains(user.id) ? Icons.check : Icons.person_add,
+                                    size: 18,
+                                  ),
+                                  label: Text(_followingUsers.contains(user.id) ? 'Following' : 'Follow'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _followingUsers.contains(user.id) ? Colors.green : Colors.deepPurple,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () => _messageUser(user.id, user.name),
+                                icon: const Icon(Icons.message, size: 18),
+                                label: const Text('Message'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      FutureBuilder<QuerySnapshot>(
+                        future: _firestore.collection('company_members').where('userId', isEqualTo: user.id).get(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) return const SizedBox();
+                          final memberships = snapshot.data!.docs;
+                          if (memberships.isEmpty) return const Text('No company collaborations');
+                          
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Collaborations (${memberships.length})', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 8),
+                              ...memberships.map((doc) {
+                                final data = doc.data() as Map<String, dynamic>;
+                                return FutureBuilder<DocumentSnapshot>(
+                                  future: _firestore.collection('companies').doc(data['companyId']).get(),
+                                  builder: (context, companySnapshot) {
+                                    if (!companySnapshot.hasData) return const SizedBox();
+                                    final companyData = companySnapshot.data!.data() as Map<String, dynamic>?;
+                                    if (companyData == null) return const SizedBox();
+                                    
+                                    return Container(
+                                      margin: const EdgeInsets.only(bottom: 8),
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[100],
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.business, color: Colors.deepPurple),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(companyData['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                                                Text('Position: ${data['position'] ?? 'Member'}', style: TextStyle(color: Colors.grey[600])),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  void _showCompanyProfile(Map<String, dynamic> company) async {
+    _addToRecentSearches(company['name']);
+    try {
+      final companyModel = CompanyModel(
+        id: company['id'],
+        name: company['name'],
+        description: company['description'] ?? '',
+        industry: company['industry'] ?? '',
+        ownerId: company['ownerId'],
+        memberIds: List<String>.from(company['memberIds'] ?? []),
+        createdAt: DateTime.now(),
+      );
+      
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CompanyDetailsPage(company: companyModel),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to load company details'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Widget _buildSearchResultCard(UserModel user) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserDetailsPage(user: user),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.grey[200]!,
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.deepPurple.withOpacity(0.3), width: 2),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: user.profilePicUrl != null
+                    ? Image.network(
+                        user.profilePicUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.deepPurple.withOpacity(0.8),
+                                Colors.purple.withOpacity(0.6),
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.deepPurple.withOpacity(0.8),
+                              Colors.purple.withOpacity(0.6),
+                            ],
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          user.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          user.isWorkingAtCompany ? 'Company' : 'Entrepreneur',
+                          style: const TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.deepPurple,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    user.bio ?? user.email,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                      height: 1.3,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 14,
+                        color: Colors.grey[500],
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          user.location ?? 'No location',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                if (_followingUsers.contains(user.id)) {
+                  _unfollowUser(user.id);
+                } else {
+                  _followUser(user.id);
+                }
+              },
+              icon: Icon(
+                _followingUsers.contains(user.id) ? Icons.person_remove : Icons.person_add,
+                color: _followingUsers.contains(user.id) ? Colors.green : Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentSearches() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Recent Searches',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              TextButton(
+                onPressed: _recentSearches.isNotEmpty ? _clearRecentSearches : null,
+                child: Text(
+                  'Clear All',
+                  style: TextStyle(
+                    color: _recentSearches.isNotEmpty ? Colors.deepPurple : Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...List.generate(
+            _recentSearches.length,
+            (index) => Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: Icon(
+                  Icons.history,
+                  color: Colors.grey[600],
+                ),
+                title: Text(
+                  _recentSearches[index],
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black87,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.north_west,
+                  color: Colors.grey[400],
+                  size: 20,
+                ),
+                onTap: () {
+                  _searchController.text = _recentSearches[index];
+                  _performSearch(_recentSearches[index]);
+                },
+                onLongPress: () {
+                  setState(() {
+                    _recentSearches.removeAt(index);
+                  });
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Popular Categories',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildCategoryChip('Technology', Icons.computer),
+              _buildCategoryChip('Finance', Icons.account_balance),
+              _buildCategoryChip('Healthcare', Icons.local_hospital),
+              _buildCategoryChip('E-commerce', Icons.shopping_cart),
+              _buildCategoryChip('Education', Icons.school),
+              _buildCategoryChip('Energy', Icons.bolt),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompanyResultCard(Map<String, dynamic> company) {
+    return GestureDetector(
+      onTap: () => _showCompanyProfile(company),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[200]!, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.blue.withOpacity(0.3), width: 2),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: company['photoUrl'] != null
+                    ? Image.network(
+                        company['photoUrl'],
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          color: Colors.blue.withOpacity(0.1),
+                          child: const Icon(Icons.business, color: Colors.blue, size: 30),
+                        ),
+                      )
+                    : Container(
+                        color: Colors.blue.withOpacity(0.1),
+                        child: const Icon(Icons.business, color: Colors.blue, size: 30),
+                      ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          company['name'],
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          company['industry'],
+                          style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: Colors.blue),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    company['description'] ?? 'No description',
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.3),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.group, size: 14, color: Colors.grey[500]),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${(company['memberIds'] as List?)?.length ?? 0} members',
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                if (_followingCompanies.contains(company['id'])) {
+                  _unfollowCompany(company['id']);
+                } else {
+                  _followCompany(company['id']);
+                }
+              },
+              icon: Icon(
+                _followingCompanies.contains(company['id']) ? Icons.favorite : Icons.favorite_border,
+                color: _followingCompanies.contains(company['id']) ? Colors.red : Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryChip(String label, IconData icon) {
+    return InkWell(
+      onTap: () {
+        _searchController.text = label;
+        _performSearch(label);
+        _addToRecentSearches(label);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.grey[300]!,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: Colors.deepPurple,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
