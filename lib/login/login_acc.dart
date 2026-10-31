@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         decoration: BoxDecoration(
-                          color: _isLoginSelected ? const Color(0xFF6A5AE0).withOpacity(0.3) : const Color(0xFFE91E63).withOpacity(0.3),
+                          color: _isLoginSelected ? const Color(0xFF6A5AE0).withValues(alpha: 0.3) : const Color(0xFFE91E63).withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(25),
                         ),
                         child: Row(
@@ -256,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: TextField(
@@ -272,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: TextField(
@@ -296,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: TextField(
@@ -312,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: TextField(
@@ -328,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: TextField(
@@ -344,7 +344,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: TextField(
@@ -361,7 +361,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: TextField(
@@ -384,7 +384,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: InkWell(

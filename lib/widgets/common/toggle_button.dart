@@ -66,7 +66,7 @@ class _ToggleButtonState extends ConsumerState<ToggleButton>
                 boxShadow: selected
                     ? [
                         BoxShadow(
-                          color: Colors.deepPurple.withOpacity(0.3),
+                          color: Colors.deepPurple.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         )

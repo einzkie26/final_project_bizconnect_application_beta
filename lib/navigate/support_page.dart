@@ -76,7 +76,7 @@ class _SupportPageState extends State<SupportPage> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(50),
             ),
             child: const Icon(Icons.support_agent, size: 48, color: Colors.white),
@@ -112,7 +112,7 @@ class _SupportPageState extends State<SupportPage> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

@@ -97,7 +97,7 @@ class _UserManualState extends State<UserManual> {
                     style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center),
                 const SizedBox(height: 8),
                 Text(_pages[_currentPage].subtitle,
-                    style: TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.9)), textAlign: TextAlign.center),
+                    style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.9)), textAlign: TextAlign.center),
               ],
             ),
           ),
@@ -204,7 +204,7 @@ class _UserManualState extends State<UserManual> {
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(colors: [Color(0xFF6A5AE0), Color(0xFFE91E63)]),
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [BoxShadow(color: const Color(0xFF6A5AE0).withOpacity(0.4), blurRadius: 12, offset: const Offset(0, 6))],
+                    boxShadow: [BoxShadow(color: const Color(0xFF6A5AE0).withValues(alpha: 0.4), blurRadius: 12, offset: const Offset(0, 6))],
                   ),
                   child: ElevatedButton.icon(
                     onPressed: () {
@@ -243,9 +243,9 @@ class _UserManualState extends State<UserManual> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF6A5AE0).withOpacity(0.3), width: 2),
+        border: Border.all(color: const Color(0xFF6A5AE0).withValues(alpha: 0.3), width: 2),
         boxShadow: [
-          BoxShadow(color: Colors.grey.withOpacity(0.15), blurRadius: 12, offset: const Offset(0, 6)),
+          BoxShadow(color: Colors.grey.withValues(alpha: 0.15), blurRadius: 12, offset: const Offset(0, 6)),
         ],
       ),
       child: Column(

@@ -558,7 +558,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
                                     borderRadius: BorderRadius.circular(20),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.grey.withOpacity(0.1),
+                                        color: Colors.grey.withValues(alpha: 0.1),
                                         spreadRadius: 1,
                                         blurRadius: 3,
                                         offset: const Offset(0, 1),
@@ -591,7 +591,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
                                           border: Border.all(color: Colors.grey[300]!),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.grey.withOpacity(0.2),
+                                              color: Colors.grey.withValues(alpha: 0.2),
                                               blurRadius: 4,
                                               offset: const Offset(0, 2),
                                             ),
@@ -748,7 +748,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
+                          color: Colors.grey.withValues(alpha: 0.1),
                           spreadRadius: 1,
                           blurRadius: 3,
                           offset: const Offset(0, -1),
@@ -1363,7 +1363,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -1420,7 +1420,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: messageData['accepted'] == true ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+              color: messageData['accepted'] == true ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -1811,7 +1811,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.orange.withOpacity(0.1),
+            color: Colors.orange.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -1846,7 +1846,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: messageData['accepted'] == true ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+              color: messageData['accepted'] == true ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -2663,7 +2663,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.orange.withOpacity(0.1),
+            color: Colors.orange.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(

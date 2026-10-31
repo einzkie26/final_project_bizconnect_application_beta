@@ -79,7 +79,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                       hintText: 'Search users...',
                       prefixIcon: const Icon(Icons.search, color: Colors.white70),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.1),
+                      fillColor: Colors.white.withValues(alpha: 0.1),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -100,7 +100,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                             labelText: 'Role',
                             labelStyle: const TextStyle(color: Colors.white70),
                             filled: true,
-                            fillColor: Colors.white.withOpacity(0.1),
+                            fillColor: Colors.white.withValues(alpha: 0.1),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
@@ -122,7 +122,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                             labelText: 'Status',
                             labelStyle: const TextStyle(color: Colors.white70),
                             filled: true,
-                            fillColor: Colors.white.withOpacity(0.1),
+                            fillColor: Colors.white.withValues(alpha: 0.1),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
@@ -147,7 +147,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                   final user = filteredUsers[index];
                   return Card(
                     margin: const EdgeInsets.only(bottom: 8),
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -155,7 +155,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                       title: Row(
                         children: [
                           CircleAvatar(
-                            backgroundColor: Colors.white.withOpacity(0.2),
+                            backgroundColor: Colors.white.withValues(alpha: 0.2),
                             child: Text(
                               user['name'][0].toUpperCase(),
                               style: const TextStyle(color: Colors.white),
@@ -183,7 +183,7 @@ class _UsersTablePageState extends State<UsersTablePage> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: user['status'] == 'Active' ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+                              color: user['status'] == 'Active' ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(

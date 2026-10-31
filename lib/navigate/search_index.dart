@@ -356,7 +356,7 @@ class _SearchPageState extends State<SearchPage> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                     spreadRadius: 1,
                     blurRadius: 3,
                     offset: const Offset(0, 1),
@@ -574,12 +574,12 @@ class _SearchPageState extends State<SearchPage> {
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Colors.deepPurple.withOpacity(0.1), Colors.purple.withOpacity(0.05)],
+                            colors: [Colors.deepPurple.withValues(alpha: 0.1), Colors.purple.withValues(alpha: 0.05)],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.deepPurple.withOpacity(0.2)),
+                          border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.2)),
                         ),
                         child: Row(
                           children: [
@@ -588,7 +588,7 @@ class _SearchPageState extends State<SearchPage> {
                               height: 80,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.deepPurple.withOpacity(0.3), width: 2),
+                                border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.3), width: 2),
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(14),
@@ -599,7 +599,7 @@ class _SearchPageState extends State<SearchPage> {
                                         errorBuilder: (_, __, ___) => Container(
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
-                                              colors: [Colors.deepPurple.withOpacity(0.8), Colors.purple.withOpacity(0.6)],
+                                              colors: [Colors.deepPurple.withValues(alpha: 0.8), Colors.purple.withValues(alpha: 0.6)],
                                             ),
                                           ),
                                           child: Center(
@@ -613,7 +613,7 @@ class _SearchPageState extends State<SearchPage> {
                                     : Container(
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
-                                            colors: [Colors.deepPurple.withOpacity(0.8), Colors.purple.withOpacity(0.6)],
+                                            colors: [Colors.deepPurple.withValues(alpha: 0.8), Colors.purple.withValues(alpha: 0.6)],
                                           ),
                                         ),
                                         child: Center(
@@ -649,7 +649,7 @@ class _SearchPageState extends State<SearchPage> {
                           decoration: BoxDecoration(
                             color: Colors.grey[50],
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                            border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -679,9 +679,9 @@ class _SearchPageState extends State<SearchPage> {
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.05),
+                          color: Colors.blue.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                          border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -756,9 +756,9 @@ class _SearchPageState extends State<SearchPage> {
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.05),
+                          color: Colors.green.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.green.withOpacity(0.2)),
+                          border: Border.all(color: Colors.green.withValues(alpha: 0.2)),
                         ),
                         child: Row(
                           children: [
@@ -918,7 +918,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 4,
               offset: const Offset(0, 2),
@@ -932,7 +932,7 @@ class _SearchPageState extends State<SearchPage> {
               height: 60,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.deepPurple.withOpacity(0.3), width: 2),
+                border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.3), width: 2),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -944,8 +944,8 @@ class _SearchPageState extends State<SearchPage> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Colors.deepPurple.withOpacity(0.8),
-                                Colors.purple.withOpacity(0.6),
+                                Colors.deepPurple.withValues(alpha: 0.8),
+                                Colors.purple.withValues(alpha: 0.6),
                               ],
                             ),
                           ),
@@ -965,8 +965,8 @@ class _SearchPageState extends State<SearchPage> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.deepPurple.withOpacity(0.8),
-                              Colors.purple.withOpacity(0.6),
+                              Colors.deepPurple.withValues(alpha: 0.8),
+                              Colors.purple.withValues(alpha: 0.6),
                             ],
                           ),
                         ),
@@ -1008,7 +1008,7 @@ class _SearchPageState extends State<SearchPage> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.deepPurple.withOpacity(0.1),
+                          color: Colors.deepPurple.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -1184,7 +1184,7 @@ class _SearchPageState extends State<SearchPage> {
           border: Border.all(color: Colors.grey[200]!, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 4,
               offset: const Offset(0, 2),
@@ -1198,7 +1198,7 @@ class _SearchPageState extends State<SearchPage> {
               height: 60,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue.withOpacity(0.3), width: 2),
+                border: Border.all(color: Colors.blue.withValues(alpha: 0.3), width: 2),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -1207,12 +1207,12 @@ class _SearchPageState extends State<SearchPage> {
                         company['photoUrl'],
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Container(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: Colors.blue.withValues(alpha: 0.1),
                           child: const Icon(Icons.business, color: Colors.blue, size: 30),
                         ),
                       )
                     : Container(
-                        color: Colors.blue.withOpacity(0.1),
+                        color: Colors.blue.withValues(alpha: 0.1),
                         child: const Icon(Icons.business, color: Colors.blue, size: 30),
                       ),
               ),
@@ -1235,7 +1235,7 @@ class _SearchPageState extends State<SearchPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(

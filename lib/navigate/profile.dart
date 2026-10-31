@@ -106,12 +106,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       end: Alignment.bottomRight,
                       colors: _isPersonalMode
                           ? [
-                              Colors.deepPurple.withOpacity(0.8),
-                              Colors.purple.withOpacity(0.6),
+                              Colors.deepPurple.withValues(alpha: 0.8),
+                              Colors.purple.withValues(alpha: 0.6),
                             ]
                           : [
-                              Colors.pink.withOpacity(0.7),
-                              Colors.pink[300]!.withOpacity(0.5),
+                              Colors.pink.withValues(alpha: 0.7),
+                              Colors.pink[300]!.withValues(alpha: 0.5),
                             ],
                     ),
                   ),
@@ -278,7 +278,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -412,15 +412,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.deepPurple.withOpacity(0.1), Colors.purple.withOpacity(0.05)],
+                  colors: [Colors.deepPurple.withValues(alpha: 0.1), Colors.purple.withValues(alpha: 0.05)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.deepPurple.withOpacity(0.2)),
+                border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.2)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.deepPurple.withOpacity(0.1),
+                    color: Colors.deepPurple.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -460,7 +460,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
@@ -507,15 +507,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.deepPurple.withOpacity(0.08), Colors.purple.withOpacity(0.03)],
+                      colors: [Colors.deepPurple.withValues(alpha: 0.08), Colors.purple.withValues(alpha: 0.03)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.deepPurple.withOpacity(0.15)),
+                    border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.15)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.deepPurple.withOpacity(0.08),
+                        color: Colors.deepPurple.withValues(alpha: 0.08),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
@@ -561,15 +561,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.deepPurple.withOpacity(0.06), Colors.purple.withOpacity(0.02)],
+                  colors: [Colors.deepPurple.withValues(alpha: 0.06), Colors.purple.withValues(alpha: 0.02)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.deepPurple.withOpacity(0.12)),
+                border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.12)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.deepPurple.withOpacity(0.06),
+                    color: Colors.deepPurple.withValues(alpha: 0.06),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -622,15 +622,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.deepPurple.withOpacity(0.12), Colors.purple.withOpacity(0.06)],
+          colors: [Colors.deepPurple.withValues(alpha: 0.12), Colors.purple.withValues(alpha: 0.06)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.deepPurple.withOpacity(0.25)),
+        border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.25)),
         boxShadow: [
           BoxShadow(
-            color: Colors.deepPurple.withOpacity(0.12),
+            color: Colors.deepPurple.withValues(alpha: 0.12),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -691,10 +691,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.deepPurple.withOpacity(0.1)),
+                          border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.1)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.deepPurple.withOpacity(0.05),
+                              color: Colors.deepPurple.withValues(alpha: 0.05),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -717,7 +717,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: Colors.deepPurple.withOpacity(0.1),
+                                      color: Colors.deepPurple.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
@@ -733,7 +733,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.deepPurple.withOpacity(0.1),
+                                    color: Colors.deepPurple.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: IconButton(
@@ -745,7 +745,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 if (userId != FirebaseAuth.instance.currentUser?.uid)
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.red.withOpacity(0.1),
+                                      color: Colors.red.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: IconButton(
@@ -936,7 +936,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -997,7 +997,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                      border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -1115,7 +1115,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -1280,10 +1280,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.deepPurple.withOpacity(0.1), Colors.purple.withOpacity(0.05)],
+                  colors: [Colors.deepPurple.withValues(alpha: 0.1), Colors.purple.withValues(alpha: 0.05)],
                 ),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.deepPurple.withOpacity(0.2)),
+                border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.2)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1358,12 +1358,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isPopular 
-            ? [Colors.deepPurple.withOpacity(0.15), Colors.purple.withOpacity(0.08)]
-            : [Colors.grey.withOpacity(0.05), Colors.grey.withOpacity(0.02)],
+            ? [Colors.deepPurple.withValues(alpha: 0.15), Colors.purple.withValues(alpha: 0.08)]
+            : [Colors.grey.withValues(alpha: 0.05), Colors.grey.withValues(alpha: 0.02)],
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isPopular ? Colors.deepPurple : Colors.grey.withOpacity(0.3),
+          color: isPopular ? Colors.deepPurple : Colors.grey.withValues(alpha: 0.3),
           width: isPopular ? 2 : 1,
         ),
       ),
@@ -1901,7 +1901,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
+        color: Colors.orange.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.orange),
       ),
@@ -2068,7 +2068,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -2392,7 +2392,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     if (!futureSnapshot.hasData || futureSnapshot.data!.isEmpty) {
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.blue.withOpacity(0.1),
+                          backgroundColor: Colors.blue.withValues(alpha: 0.1),
                           child: const Icon(Icons.business, color: Colors.blue),
                         ),
                         title: const Text('Company Chat'),
@@ -2405,7 +2405,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: Colors.blue.withOpacity(0.1),
+                        backgroundColor: Colors.blue.withValues(alpha: 0.1),
                         child: const Icon(Icons.business, color: Colors.blue),
                       ),
                       title: Text(companyData['name']),
@@ -2511,7 +2511,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.blue.withOpacity(0.1),
+                          backgroundColor: Colors.blue.withValues(alpha: 0.1),
                           child: const Icon(Icons.business, color: Colors.blue),
                         ),
                         title: Text(companyData['name']),

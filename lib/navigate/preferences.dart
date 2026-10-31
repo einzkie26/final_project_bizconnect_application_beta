@@ -35,7 +35,7 @@ class PreferencesPage extends ConsumerWidget {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                     spreadRadius: 1,
                     blurRadius: 3,
                     offset: const Offset(0, 1),
@@ -55,7 +55,7 @@ class PreferencesPage extends ConsumerWidget {
                   const Spacer(),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.deepPurple.withOpacity(0.1),
+                      color: Colors.deepPurple.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
@@ -263,7 +263,7 @@ class PreferencesPage extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: Colors.grey.withValues(alpha: 0.1),
                             spreadRadius: 1,
                             blurRadius: 4,
                             offset: const Offset(0, 2),
@@ -332,7 +332,7 @@ class PreferencesPage extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -364,7 +364,7 @@ class PreferencesPage extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.deepPurple.withOpacity(0.1),
+                  color: Colors.deepPurple.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -424,7 +424,7 @@ class PreferencesPage extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.deepPurple.withOpacity(0.1),
+              color: Colors.deepPurple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -752,7 +752,7 @@ class _BlockedUsersPageState extends State<BlockedUsersPage> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withValues(alpha: 0.1),
                         spreadRadius: 1,
                         blurRadius: 4,
                         offset: const Offset(0, 2),
@@ -763,7 +763,7 @@ class _BlockedUsersPageState extends State<BlockedUsersPage> {
                     contentPadding: const EdgeInsets.all(16),
                     leading: CircleAvatar(
                       radius: 25,
-                      backgroundColor: Colors.deepPurple.withOpacity(0.1),
+                      backgroundColor: Colors.deepPurple.withValues(alpha: 0.1),
                       backgroundImage: profilePicUrl != null ? NetworkImage(profilePicUrl) : null,
                       child: profilePicUrl == null
                           ? Text(
@@ -792,7 +792,7 @@ class _BlockedUsersPageState extends State<BlockedUsersPage> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: blockType == 'company' ? Colors.blue.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+                            color: blockType == 'company' ? Colors.blue.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(

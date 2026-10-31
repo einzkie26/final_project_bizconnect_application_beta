@@ -131,7 +131,7 @@ class _MessagesPageState extends ConsumerState<MessagesPage> with SingleTickerPr
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                     spreadRadius: 1,
                     blurRadius: 3,
                     offset: const Offset(0, 1),
@@ -328,15 +328,15 @@ class _MessagesPageState extends ConsumerState<MessagesPage> with SingleTickerPr
                           margin: const EdgeInsets.only(bottom: 12),
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: chat.hasUnread ? Colors.purple.withOpacity(0.05) : Colors.white,
+                            color: chat.hasUnread ? Colors.purple.withValues(alpha: 0.05) : Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: chat.hasUnread ? Colors.deepPurple.withOpacity(0.2) : Colors.grey.withOpacity(0.2),
+                              color: chat.hasUnread ? Colors.deepPurple.withValues(alpha: 0.2) : Colors.grey.withValues(alpha: 0.2),
                               width: 1,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: Colors.grey.withValues(alpha: 0.1),
                                 spreadRadius: 1,
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
@@ -352,8 +352,8 @@ class _MessagesPageState extends ConsumerState<MessagesPage> with SingleTickerPr
                                       decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                           colors: [
-                                            Colors.blue.withOpacity(0.8),
-                                            Colors.lightBlue.withOpacity(0.6),
+                                            Colors.blue.withValues(alpha: 0.8),
+                                            Colors.lightBlue.withValues(alpha: 0.6),
                                           ],
                                         ),
                                         shape: BoxShape.circle,
@@ -378,8 +378,8 @@ class _MessagesPageState extends ConsumerState<MessagesPage> with SingleTickerPr
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
-                                                Colors.deepPurple.withOpacity(0.8),
-                                                Colors.purple.withOpacity(0.6),
+                                                Colors.deepPurple.withValues(alpha: 0.8),
+                                                Colors.purple.withValues(alpha: 0.6),
                                               ],
                                             ),
                                             shape: BoxShape.circle,
@@ -584,15 +584,15 @@ class _MessagesPageState extends ConsumerState<MessagesPage> with SingleTickerPr
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: chat.hasUnread ? Colors.blue.withOpacity(0.05) : Colors.white,
+                  color: chat.hasUnread ? Colors.blue.withValues(alpha: 0.05) : Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: chat.hasUnread ? Colors.blue.withOpacity(0.2) : Colors.grey.withOpacity(0.2),
+                    color: chat.hasUnread ? Colors.blue.withValues(alpha: 0.2) : Colors.grey.withValues(alpha: 0.2),
                     width: 1,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 1,
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -613,7 +613,7 @@ class _MessagesPageState extends ConsumerState<MessagesPage> with SingleTickerPr
                           width: 50,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1),
+                            color: Colors.blue.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: photoUrl != null
@@ -790,9 +790,9 @@ class _MessagesPageState extends ConsumerState<MessagesPage> with SingleTickerPr
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [

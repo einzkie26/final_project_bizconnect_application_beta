@@ -392,7 +392,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             height: 40,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.deepPurple.withOpacity(0.1),
+                              color: Colors.deepPurple.withValues(alpha: 0.1),
                             ),
                             child: ClipOval(
                               child: userProfile?.profilePicUrl != null
@@ -456,7 +456,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.1),
+                      color: Colors.orange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Text(
@@ -526,11 +526,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                                           width: 50,
                                           height: 50,
                                           decoration: BoxDecoration(
-                                            color: Colors.deepPurple.withOpacity(0.1),
+                                            color: Colors.deepPurple.withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.grey.withOpacity(0.3),
+                                                color: Colors.grey.withValues(alpha: 0.3),
                                                 blurRadius: 8,
                                                 offset: const Offset(0, 4),
                                               ),
@@ -719,7 +719,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                       width: 50,
                                       height: 50,
                                       decoration: BoxDecoration(
-                                        color: Colors.deepPurple.withOpacity(0.1),
+                                        color: Colors.deepPurple.withValues(alpha: 0.1),
                                         shape: BoxShape.circle,
                                       ),
                                       child: photoUrl != null

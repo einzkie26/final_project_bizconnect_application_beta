@@ -195,7 +195,7 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                               errorBuilder: (_, __, ___) => Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [Colors.deepPurple.withOpacity(0.8), Colors.purple.withOpacity(0.6)],
+                                    colors: [Colors.deepPurple.withValues(alpha: 0.8), Colors.purple.withValues(alpha: 0.6)],
                                   ),
                                 ),
                                 child: const Center(child: Icon(Icons.business, size: 80, color: Colors.white)),
@@ -204,7 +204,7 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                           : Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [Colors.deepPurple.withOpacity(0.8), Colors.purple.withOpacity(0.6)],
+                                  colors: [Colors.deepPurple.withValues(alpha: 0.8), Colors.purple.withValues(alpha: 0.6)],
                                 ),
                               ),
                               child: const Center(child: Icon(Icons.business, size: 80, color: Colors.white)),
@@ -216,7 +216,7 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.deepPurple.withOpacity(0.8),
+                              Colors.deepPurple.withValues(alpha: 0.8),
                             ],
                           ),
                         ),
@@ -241,7 +241,7 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
+                          color: Colors.grey.withValues(alpha: 0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -290,7 +290,7 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: Colors.grey.withValues(alpha: 0.1),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
@@ -336,7 +336,7 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
+                          color: Colors.grey.withValues(alpha: 0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),

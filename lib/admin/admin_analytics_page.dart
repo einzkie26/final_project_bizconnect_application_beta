@@ -145,7 +145,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -283,7 +283,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: color, size: 20),
@@ -341,7 +341,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage>
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF4285F4).withOpacity(0.1),
+                        color: const Color(0xFF4285F4).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(Icons.trending_up, color: Color(0xFF4285F4)),
@@ -408,8 +408,8 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage>
                         show: true,
                         gradient: LinearGradient(
                           colors: [
-                            const Color(0xFF4285F4).withOpacity(0.3),
-                            const Color(0xFF4285F4).withOpacity(0.1),
+                            const Color(0xFF4285F4).withValues(alpha: 0.3),
+                            const Color(0xFF4285F4).withValues(alpha: 0.1),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -445,7 +445,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF34A853).withOpacity(0.1),
+                    color: const Color(0xFF34A853).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.chat_bubble_outline, color: Color(0xFF34A853)),
@@ -495,7 +495,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEA4335).withOpacity(0.1),
+                    color: const Color(0xFFEA4335).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.favorite_border, color: Color(0xFFEA4335)),
@@ -545,7 +545,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFBBC04).withOpacity(0.1),
+                    color: const Color(0xFFFBBC04).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.business_center_outlined, color: Color(0xFFFBBC04)),

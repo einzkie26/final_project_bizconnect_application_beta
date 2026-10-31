@@ -117,7 +117,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.deepPurple.withOpacity(0.8), Colors.purple.withOpacity(0.6)],
+                  colors: [Colors.deepPurple.withValues(alpha: 0.8), Colors.purple.withValues(alpha: 0.6)],
                 ),
               ),
               child: Column(
@@ -216,7 +216,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                       decoration: BoxDecoration(
                         color: Colors.grey[50],
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,9 +232,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.05),
+                      color: Colors.blue.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                      border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,7 +288,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                          border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

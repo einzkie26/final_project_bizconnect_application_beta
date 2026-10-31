@@ -74,7 +74,7 @@ class _AdminSetupPageState extends State<AdminSetupPage> {
   Widget _buildTextField(TextEditingController controller, String hint, IconData icon, {bool obscure = false}) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextField(

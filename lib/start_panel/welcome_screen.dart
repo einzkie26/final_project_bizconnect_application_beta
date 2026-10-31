@@ -93,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF6A5AE0).withOpacity(0.3),
+                            color: const Color(0xFF6A5AE0).withValues(alpha: 0.3),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -176,12 +176,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                           height: 56,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [_colorAnimation.value!, _colorAnimation.value!.withOpacity(0.8)],
+                              colors: [_colorAnimation.value!, _colorAnimation.value!.withValues(alpha: 0.8)],
                             ),
                             borderRadius: BorderRadius.circular(28),
                             boxShadow: [
                               BoxShadow(
-                                color: _colorAnimation.value!.withOpacity(0.4),
+                                color: _colorAnimation.value!.withValues(alpha: 0.4),
                                 blurRadius: 15,
                                 offset: const Offset(0, 8),
                               ),

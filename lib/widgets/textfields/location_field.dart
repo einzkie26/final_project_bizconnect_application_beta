@@ -32,7 +32,7 @@ class _LocationFieldState extends State<LocationField> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
           ),
           child: TextFormField(
@@ -76,7 +76,7 @@ class _LocationFieldState extends State<LocationField> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Colors.grey.withValues(alpha: 0.2),
                   blurRadius: 5,
                   offset: const Offset(0, 2),
                 ),
